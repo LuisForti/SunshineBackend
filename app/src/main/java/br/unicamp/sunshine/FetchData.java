@@ -16,6 +16,7 @@ public class FetchData extends AsyncTask<String, Void, Void> {
 
     String resultado;
     String textoFormatado = "";
+    String coord = "";
 
     @Override
     protected Void doInBackground(String... params) {
@@ -54,6 +55,10 @@ public class FetchData extends AsyncTask<String, Void, Void> {
                 String key = (String) keys.next();
                 Object objetoAtual = jObject.get(key);
 
+                if((Double) objetoAtual == (-999)) {
+                    objetoAtual = 0;
+                }
+
                 data = key.substring(4, 6);
                 data += "/";
                 data += key.substring(6, 8);
@@ -68,6 +73,13 @@ public class FetchData extends AsyncTask<String, Void, Void> {
             System.out.println(err);
         }
 
+        posicaoInicial = 64;
+        posicaoFinal = resultado.indexOf("]}");
+        resultado = resultado.substring(posicaoInicial, posicaoFinal);
+        coord = "Longitude " + resultado.substring(0, resultado.indexOf(','));
+        resultado = resultado.substring(resultado.indexOf(',')+1);
+        coord += "   Latitude " + resultado.substring(0, resultado.indexOf(','));
+
         return null;
     }
 
@@ -75,5 +87,6 @@ public class FetchData extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
         MainActivity.txtJson.setText(this.textoFormatado);
+        MainActivity.txtCoord.setText(this.coord);
     }
 }
