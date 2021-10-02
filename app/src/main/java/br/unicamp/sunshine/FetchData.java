@@ -6,11 +6,9 @@ import android.os.AsyncTask;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -37,10 +35,8 @@ public class FetchData extends AsyncTask<String, Void, Void> {
                 line = bufferedReader.readLine();
                 resultado += line;
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception error) {
+            System.err.println(error);
         }
 
         int posicaoInicial = resultado.indexOf("DIRECT_ILLUMINANCE") + 20;
