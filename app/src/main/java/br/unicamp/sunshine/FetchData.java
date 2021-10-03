@@ -43,6 +43,8 @@ public class FetchData extends AsyncTask<String, Void, Void> {
         int posicaoInicial = resultado.indexOf("DIRECT_ILLUMINANCE") + 20;
         int posicaoFinal = resultado.indexOf("}}}") + 1;
         String textoSemiFormatado = resultado.substring(posicaoInicial, posicaoFinal);
+        String tempo = params[0].toString();
+        tempo = tempo.substring(41, 47);
 
         try {
             String json = textoSemiFormatado;
@@ -62,11 +64,15 @@ public class FetchData extends AsyncTask<String, Void, Void> {
                 data = key.substring(4, 6);
                 data += "/";
                 data += key.substring(6, 8);
-                data += "/";
-                data += key.substring(0, 4);
-                /*data += " ";
-                data += key.substring(8, 10);
-                data += "h";*/
+                if(tempo.equals("daily/") || tempo.equals("hourly")) {
+                    data += "/";
+                    data += key.substring(0, 4);
+                    data += " ";
+                    if (tempo.equals("hourly")) {
+                        data += key.substring(8, 10);
+                        data += "h";
+                    }
+                }
 
                 textoFormatado += data + ": " + objetoAtual + "\n";
             }
@@ -91,5 +97,6 @@ public class FetchData extends AsyncTask<String, Void, Void> {
         super.onPostExecute(unused);
         MainActivity.txtJson.setText(this.textoFormatado);
         MainActivity.txtCoord.setText(this.coord);
+        MainActivity.btnAbrir.performClick();
     }
 }

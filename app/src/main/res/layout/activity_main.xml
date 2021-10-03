@@ -20,7 +20,7 @@
         android:id="@+id/tvJsonItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text=""
         android:visibility="invisible"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="96dp" />
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
         android:layout_marginTop="180dp"
-        android:text="TextView"
+        android:text=""
         android:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
