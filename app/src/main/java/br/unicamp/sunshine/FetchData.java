@@ -64,6 +64,9 @@ public class FetchData extends AsyncTask<String, Void, Void> {
                 data += key.substring(6, 8);
                 data += "/";
                 data += key.substring(0, 4);
+                /*data += " ";
+                data += key.substring(8, 10);
+                data += "h";*/
 
                 textoFormatado += data + ": " + objetoAtual + "\n";
             }

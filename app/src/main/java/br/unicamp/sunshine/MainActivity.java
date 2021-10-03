@@ -2,6 +2,7 @@ package br.unicamp.sunshine;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     public static TextView txtJson;
     public static TextView txtCoord;
     WebView webView;
+    String ret[][];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +39,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FetchData process = new FetchData();
-                process.execute("https://power.larc.nasa.gov/api/temporal/hourly/point?latitude=50.779734&longitude=11.510128&community=sb&parameters=DIRECT_ILLUMINANCE&start=20110101&end=20110101");
+                process.execute("https://power.larc.nasa.gov/api/temporal/daily/point?latitude=50.779734&longitude=11.510128&community=sb&parameters=DIRECT_ILLUMINANCE&start=20110104&end=20110910");
             }
         });
 
         btnAbrir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WebAppInterface teste = new WebAppInterface();
-                teste.getDados();
+                String jSon = txtJson.getText().toString();
+                int quantosDados = 0;
+                while (!jSon.equals(""))
+                {
+                    quantosDados++;
+                    jSon = jSon.substring(jSon.indexOf('\n')+1);
+                }
+
+                ret = new String[quantosDados][2];
+                jSon = txtJson.getText().toString();
+                int posicaoAtual = 0;
+
+                while (!jSon.equals(""))
+                {
+                    String data = jSon.substring(0, jSon.indexOf(":"));
+                    String luminosidade = jSon.substring(jSon.indexOf(":")+1, jSon.indexOf('\n'));
+                    jSon = jSon.substring(jSon.indexOf('\n')+1);
+                    ret[posicaoAtual][0] = data;
+                    ret[posicaoAtual][1] = luminosidade;
+                    posicaoAtual++;
+                }
 
                 webView.addJavascriptInterface(new WebAppInterface(), "Android");
 
@@ -62,28 +83,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public Array[] getDados() {
-            String jSon = txtJson.getText().toString();
-            int quantosDados = 0;
-            while (jSon != "")
-            {
-                quantosDados++;
-                jSon = jSon.substring(jSon.indexOf('\n')+1);
-            }
+        public int getQuantidade() {
+            return ret.length;
+        }
 
-            ArrayList[] ret = new ArrayList[quantosDados];
-            jSon = txtJson.getText().toString();
-            int posicaoAtual = 0;
-
-            while (jSon != "")
-            {
-                String data = jSon.substring(0, jSon.indexOf(":"));
-                Integer luminosidade = Integer.parseInt(jSon.substring(jSon.indexOf(":")+1, jSon.indexOf('\n')));
-                jSon = jSon.substring(jSon.indexOf('\n'));
-                ret[posicaoAtual] = [data, luminosidade];
-                posicaoAtual++;
-            }
-            return ret;
+        @JavascriptInterface
+        public String getDados(int numeroString, int numeroValor) {
+            return ret[numeroString][numeroValor];
         }
     }
 }
